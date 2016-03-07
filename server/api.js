@@ -29,6 +29,13 @@ Router = {
           }
         });
       },
+      get: function(cb) {
+        Picker.route(route, function(params, req, res) {
+          if (req.method == 'GET') {
+            cb(params, req, res);
+          }
+        });
+      }
     }
   }
 };
@@ -41,6 +48,14 @@ const fail = (message, res) => {
   res.end(message);
 }
 
+
+/*
+ * simple route to test server availability
+ */
+Router.route('/v1/ping')
+  .get(function(params, req, res) {
+    res.end('pong');
+  });
 
 /*
  * Start to track a session, even before an event is logged
