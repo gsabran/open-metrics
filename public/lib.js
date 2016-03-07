@@ -1,6 +1,4 @@
 window._mq = window._mq || [];
-window.metricUrl = 'http://localhost:3000';
-
 window.Metrics = function() {
   // simple cookie api, from https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie/Simple_document.cookie_framework
   var docCookies = {
