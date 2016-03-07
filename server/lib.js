@@ -5,23 +5,6 @@ import {
 } from '../lib/collections.js';
 
 /*
- * parse the cookies and return the session Id
- */
-export const getSessionId = (req) => {
-  // parse cookies
-  var cookies = {};
-  var rc = req.headers.cookie;
-  if (!rc)
-    return;
-
-  for (var cookie of rc.split(';')) {
-    var parts = cookie.split('=');
-    if (parts.shift().trim() === '_metricId')
-      return parts[0];
-  }
-}
-
-/*
  * from a session id, get the corresponding user or create a new one
  */
 export const getOrCreateUser = (sessionId) => {

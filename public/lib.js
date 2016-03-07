@@ -62,7 +62,6 @@ window.Metrics = function() {
      */
 
 
-
     /*
      * a queue of events to be logged. We only make one request a second
      */
@@ -73,6 +72,7 @@ window.Metrics = function() {
      * @callback is called when the request is done
      */
     _get: function(route, payload, callback) {
+      payload.sessionId = docCookies.getItem(COOKIE_KEY);
       var url = window.metricUrl + route + '?q='+JSON.stringify(payload);
       var xhr = new XMLHttpRequest();
       xhr.open("GET", url, true);

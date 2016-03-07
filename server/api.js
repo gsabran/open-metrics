@@ -1,5 +1,4 @@
 import {
-  getSessionId,
   getOrCreateUser,
   logActivity,
   logEvents,
@@ -64,7 +63,7 @@ Router.route('/v1/ping')
  */
 Router.route('/v1/createUser')
   .get(function(params, req, res) {
-    var sessionId = getSessionId(req);
+    var sessionId = params.sessionId;
     if (!sessionId)
       return fail('no session ID', res);
 
@@ -79,7 +78,7 @@ Router.route('/v1/createUser')
  */
 Router.route('/v1/events')
   .get(function(params, req, res) {
-    var sessionId = getSessionId(req);
+    var sessionId = params.sessionId;
     if (!sessionId)
       return fail('no session ID', res);
 
@@ -95,7 +94,7 @@ Router.route('/v1/events')
  */
 Router.route('/v1/setUserId')
   .get(function(params, req, res) {
-    var sessionId = getSessionId(req);
+    var sessionId = params.sessionId;
     if (!sessionId)
       return fail('no session ID', res);
 
@@ -110,7 +109,7 @@ Router.route('/v1/setUserId')
  */
 Router.route('/v1/setUserProps')
   .get(function(params, req, res) {
-    var sessionId = getSessionId(req);
+    var sessionId = params.sessionId;
     if (!sessionId)
       return fail('no session ID', res);
 
