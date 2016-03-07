@@ -1,6 +1,6 @@
 {
   "name": "metrics",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "an open source app to log, process, and display product metrics",
   "scripts": {
     "test": "mocha ./tests --compilers js:babel-register"
