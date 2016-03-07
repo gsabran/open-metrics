@@ -1,0 +1,5 @@
+while (ClientUsers.findOne()) ClientUsers.remove(ClientUsers.findOne()._id)
+while (Events.findOne()) Events.remove(Events.findOne()._id)
+while (UniqueActiveUsers.findOne()) UniqueActiveUsers.remove(UniqueActiveUsers.findOne()._id)
+while (Metrics.findOne()) Metrics.remove(Metrics.findOne()._id)
+while (Users.findOne()) Users.remove(Users.findOne()._id)
