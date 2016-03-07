@@ -79,7 +79,7 @@ window.Metrics = function() {
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
           callback && callback();
-          console.log(xhr.responseText);
+          // console.log(xhr.responseText);
         }
       }
       xhr.send(null);
