@@ -29,7 +29,6 @@ window.Metrics = function() {
      */
     logEvent: function(eventName, properties) {
       Metrics._eventsQueue.push({name: eventName, props: properties, ts: Date.now()});
-      console.log('logEvent', Metrics._eventsQueue.length);
       Metrics._pingFlush();
     },
 
@@ -37,7 +36,7 @@ window.Metrics = function() {
      * set the user ID to be use, probably to match the id on your product
      */
     setUserId: function(newUserId) {
-      Metrics._post('/v1/setUserId', {uid: newUserId});
+      Metrics._get('/v1/setUserId', {uid: newUserId});
     },
     
     /*
@@ -45,7 +44,7 @@ window.Metrics = function() {
      * @properties should be a hash of propertyName: propertyValue
      */
     setUserProperties: function(properties) {
-      Metrics._post('/v1/setUserProps', {props: properties});
+      Metrics._get('/v1/setUserProps', {props: properties});
     },
     
     /*
@@ -73,18 +72,17 @@ window.Metrics = function() {
      * make a simple POST request to the server
      * @callback is called when the request is done
      */
-    _post: function(route, payload, callback) {
-      var url = window.metricUrl + route;
+    _get: function(route, payload, callback) {
+      var url = window.metricUrl + route + '?q='+JSON.stringify(payload);
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', url);
-      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.open("GET", url, true);
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
           callback && callback();
           console.log(xhr.responseText);
         }
       }
-      xhr.send(JSON.stringify(payload));
+      xhr.send(null);
     },
 
     /*
@@ -129,7 +127,7 @@ window.Metrics = function() {
       if (!Metrics._eventsQueue.length)
         return;
 
-      Metrics._post('/v1/events', {events: Metrics._eventsQueue});
+      Metrics._get('/v1/events', {events: Metrics._eventsQueue});
       Metrics._eventsQueue = [];
     },
 

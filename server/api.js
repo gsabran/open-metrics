@@ -31,8 +31,9 @@ Router = {
       },
       get: function(cb) {
         Picker.route(route, function(params, req, res) {
+          console.log('request', JSON.parse(params.query.q));
           if (req.method == 'GET') {
-            cb(params, req, res);
+            cb(JSON.parse(params.query.q), req, res);
           }
         });
       }
@@ -61,7 +62,7 @@ Router.route('/v1/ping')
  * Start to track a session, even before an event is logged
  */
 Router.route('/v1/createUser')
-  .post(function(params, req, res) {
+  .get(function(params, req, res) {
     var sessionId = getSessionId(req);
     if (!sessionId)
       return fail('no session ID', res);
@@ -76,13 +77,13 @@ Router.route('/v1/createUser')
  * log an array of events
  */
 Router.route('/v1/events')
-  .post(function(params, req, res) {
+  .get(function(params, req, res) {
     var sessionId = getSessionId(req);
     if (!sessionId)
       return fail('no session ID', res);
 
     const user = getOrCreateUser(sessionId);
-    logEvents(user, req.body.events);
+    logEvents(user, params.events);
     logActivity(user);
 
     res.end('ok');
@@ -93,13 +94,13 @@ Router.route('/v1/events')
  * and handle conflicts
  */
 Router.route('/v1/setUserId')
-  .post(function(params, req, res) {
+  .get(function(params, req, res) {
     var sessionId = getSessionId(req);
     if (!sessionId)
       return fail('no session ID', res);
 
     const user = getOrCreateUser(sessionId);
-    setUserId(user, req.body.uid);
+    setUserId(user, params.uid);
 
     res.end('ok');
   });
@@ -108,13 +109,13 @@ Router.route('/v1/setUserId')
  * Assign some properties to the current user
  */
 Router.route('/v1/setUserProps')
-  .post(function(params, req, res) {
+  .get(function(params, req, res) {
     var sessionId = getSessionId(req);
     if (!sessionId)
       return fail('no session ID', res);
 
     const user = getOrCreateUser(sessionId);
-    addPropertiesToUser(user, req.body.props);
+    addPropertiesToUser(user, params.props);
 
     res.end('ok');
   });
