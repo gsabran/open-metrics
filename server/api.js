@@ -33,7 +33,7 @@ Router = {
         Picker.route(route, function(params, req, res) {
           console.log('request', JSON.parse(params.query.q));
           if (req.method == 'GET') {
-            res.writeHead('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Origin', '*');
             cb(JSON.parse(params.query.q), req, res);
           }
         });
@@ -86,7 +86,6 @@ Router.route('/v1/events')
     const user = getOrCreateUser(sessionId);
     logEvents(user, params.events);
     logActivity(user);
-
     res.end('ok');
   });
 
