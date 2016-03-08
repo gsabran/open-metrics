@@ -50,8 +50,9 @@ window.Metrics = function() {
     /*
      * create a new session, that will be independent of past events
      */
-    clearSession: function() {
-      Metrics._pingFlush(true);
+    clearSession: function(fromFlush) {
+      if (!fromFlush)
+        Metrics._pingFlush(true);
       Metrics._setNewSessionId();
     },
 
@@ -117,7 +118,7 @@ window.Metrics = function() {
             Metrics.setUserProperties(log[1]);
             break;
           case 'clearSession':
-            Metrics.clearSession();
+            Metrics.clearSession(true);
             break;
         }
       }
