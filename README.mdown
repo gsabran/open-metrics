@@ -24,6 +24,11 @@ The workflow should be:
 
 This repo has both a server that responds to events logging queries, and a UI (to be done:) ) to query and vizualize data (they might be separated in the future)
 
+## get the code:
+```bash
+git clone https://github.com/gsabran/open-metrics.git
+git submodule update --init --recursive
+```
 
 ## clients
 In order to make it easier to log events, some clients are available:
