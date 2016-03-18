@@ -1,0 +1,3 @@
+[submodule "public/apis/javascript"]
+	path = public/apis/javascript
+	url = https://github.com/gsabran/open-metrics-client-javascript.git
