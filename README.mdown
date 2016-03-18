@@ -60,7 +60,14 @@ The base logging API is:
     <tr>
       <td><sub>GET</sub></td>
       <td><sub>/v1/createUser</sub></td>
-      <td><ul><li><sub>sessionId: an id to identify the current session</sub></li></ul></td>
+      <td><ul>
+        <li><sub>sessionId: an id to identify the current session</sub></li>
+        <li><sub>options (optional):<br/></sub>
+          <ul>
+            <li><sub>active: if set to false, don't flag the user as active</sub></li>
+          </ul>
+        </li>
+      </ul></td>
       <td><sub>initiate a session</sub></td>
       <td><sub>'ok'</sub></td>
     </tr>
@@ -74,6 +81,11 @@ The base logging API is:
             <li><sub>name: the name of the event</sub></li>
             <li><sub>props (optional): a dictionary of properties attached to the event</sub></li>
             <li><sub>ts: the unix timestamp of the event</sub></li>
+            <li><sub>options (optional):<br/></sub>
+              <ul>
+                <li><sub>active: if set to false, don't flag the user as active for this event</sub></li>
+              </ul>
+            </li>
           </ul>
         </li>
       </ul></td>

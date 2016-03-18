@@ -67,7 +67,8 @@ Router.route('/v1/createUser')
       return fail('no session ID', res);
 
     const user = getOrCreateUser(sessionId);
-    logActivity(user);
+    if (!params.options || params.options.active !== false)
+      logActivity(user);
 
     res.end('ok');
   });
@@ -83,7 +84,11 @@ Router.route('/v1/events')
 
     const user = getOrCreateUser(sessionId);
     logEvents(user, params.events);
-    logActivity(user);
+    for (var event of params.events)
+      if (!event.options || event.options.active !== false) {
+        logActivity(user);
+        break;
+      }
     res.end('ok');
   });
 
