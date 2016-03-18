@@ -121,6 +121,7 @@ In order to make it easier to log events, some clients are available:
 - write UI to see metrics
 - create server + client for creating and display metrics
 - write clients in more languages / framework
-- make it possible to log time spent
+- add api to log time spent
+- add api to log session properties
 - write doc to set up server (EC2 and heroku)
 - and more!
