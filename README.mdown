@@ -81,6 +81,16 @@ The raw logging API is:
       <td><sub>set properties related to the user</sub></td>
       <td><sub>'ok'</sub></td>
     </tr>
+    <tr>
+      <td><sub>GET</sub></td>
+      <td><sub>/v1/setSessionProps</sub></td>
+      <td><ul>
+        <li><sub>sessionId: an id to identify the current session</sub></li>
+        <li><sub>props: a dictionary of properties attached to the session</sub></li>
+      </ul></td>
+      <td><sub>set properties related to the session</sub></td>
+      <td><sub>'ok'</sub></td>
+    </tr>
   </tbody>
 </table>
 
@@ -122,6 +132,5 @@ In order to make it easier to log events, some clients are available:
 - create server + client for creating and display metrics
 - write clients in more languages / framework
 - add api to log time spent
-- add api to log session properties
 - write doc to set up server (EC2 and heroku)
 - and more!

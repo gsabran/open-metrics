@@ -15,7 +15,9 @@ export const getOrCreateUser = (sessionId) => {
     sessionIds: [sessionId],
     createdAt: Date.now(),
   });
+  // at initialization, the user has an cross session id (uid) set to the current session id
   ClientUsers.update({_id: id}, {$set: {uid: id}});
+  ClientSessions.insert({_id: sessionId, uid: id, props: {}})
   return ClientUsers.findOne({_id: id});
 };
 
@@ -79,9 +81,10 @@ export const setUserId = (user, newId) => {
     // then simply change current user's uid
     ClientUsers.update({uid: user.uid}, {$set: {uid: newId}}); 
   }
-  // update the uid field of related events
+  // update the uid field of related collections
   Events.update({uid: currentUid}, {$set: {uid: newId}}, {multi: true});
   UniqueActiveUsers.update({uid: currentUid}, {$set: {uid: newId}}, {multi: true});
+  ClientSessions.update({uid: currentUid}, {$set: {uid: newId}}, {multi: true});
 }
 
 /*
@@ -93,4 +96,16 @@ export const addPropertiesToUser = (user, properties = {}) => {
     update['prop.'+propertyName] = properties[propertyName];
   }
   ClientUsers.update({uid: user.uid}, {$set: update}); 
+}
+
+
+/*
+ * add properties to the current session
+ */
+export const addPropertiesToSession = (sessionId, properties = {}) => {
+  var update = {};
+  for (var propertyName in properties) {
+    update['prop.'+propertyName] = properties[propertyName];
+  }
+  ClientSessions.update({_id: sessionId}, {$set: update}); 
 }

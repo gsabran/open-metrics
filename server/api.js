@@ -118,3 +118,19 @@ Router.route('/v1/setUserProps')
     res.end('ok');
   });
 
+
+/*
+ * Assign some properties to the current session
+ */
+Router.route('/v1/setSessionProps')
+  .get(function(params, req, res) {
+    var sessionId = params.sessionId;
+    if (!sessionId)
+      return fail('no session ID', res);
+
+    const user = getOrCreateUser(sessionId);
+    addPropertiesToSession(sessionId, params.props);
+
+    res.end('ok');
+  });
+
