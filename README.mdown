@@ -1,36 +1,126 @@
 # OpenMetrics
 
-This is a side project that intend to provide
-- easy to set up event logging system
-- flexible and easy & intuitive (both for developpers and non technical persons) to use query interface that supports
+## Goal
+This is a side project that intends to provide
+- easy to set up events logging system
+- flexible and easy/intuitive to use query interface (for both  developpers and non technical persons) that supports
     - events data
     - retention
     - funnel
     - custom metrics
     - user timeline
     - live dashboard
-- those analytics being time series or total, segmentable on user groups if needed, with the possibility to import external data for richer metrics, or simply to import premade metrics to see all what you care about in one place.
+- those metrics being time series or total number, segmentable on user groups if needed, with the possibility to import external data for richer metrics, or simply to import premade metrics to see all what you care about in one place.
 
-This repo has both a server that responds to events logging queries, and a UI (to be done:) ) to query and vizualize data
+This repo has both a server that responds to events logging queries, and a UI (to be done:) ) to query and vizualize data (they might be separated in the future)
 
-The logging API is:
-
-| type  | route            | params (passed by '?q={...}')                                                                      | action                        | expected response |
-| ----- | ---------------- | -------------------------------------------------------------------------------------------------- | ----------------------------- | ------ |
-| GET   | /v1/ping         |                                                                                                    | test that the server is alive | 'pong' |
-| GET   | /v1/createUser   | <ul><li>sessionId: an id to identify the current session                         </li></ul>        | initiate a session            | 'ok'   |
-| GET   | /v1/events       | <ul><li>sessionId: an id to identify the current session                         </li>
-                                 <li>events: an array of events:<br/>
-                                    <ul><li>name: the name of the event                                       </li>
-                                        <li>props (optional): a dictionary of properties attached to the event</li>
-                                        <li>ts: the unix timestamp of the event                               </li>
-                                    </ul>
-                             </li></ul>                                                                                         | log a list of events          | 'ok'   |
-| GET   | /v1/setUserId    | <ul><li>sessionId: an id to identify the current session                                    </li>
-                                 <li>userId: an id to identify the user, probably the one you use in your app            </li>
-                             </ul>                                                                                              | link the session to a user    | 'ok'   |
-| GET   | /v1/setUserProps | <ul><li>sessionId: an id to identify the current session                                    </li>
-                                 <li>props: a dictionary of properties attached to the user (will apply accross sessions)</li>
-                             </ul>                                                                                              | link the session to a user    | 'ok'   |
+## This solution aims to be efficient, intuitive, powerful, **self hosted** and free
 
 
+## API
+
+The raw logging API is:
+
+
+<table style="font-size:14px;">
+  <tbody>
+    <tr>
+      <th>type</th>
+      <th>route</th>
+      <th>params (passed by '?q={...}')</th>
+      <th>action</th>
+      <th>expected response</th>
+    </tr>
+    <tr>
+      <td><sub>GET</sub></td>
+      <td><sub>/v1/ping</sub></td>
+      <td><sub></sub></td>
+      <td><sub>test that the server is alive</sub></td>
+      <td><sub>'pong'</sub></td>
+    </tr>
+    <tr>
+      <td><sub>GET</sub></td>
+      <td><sub>/v1/createUser</sub></td>
+      <td><ul><li><sub>sessionId: an id to identify the current session</sub></li></ul></td>
+      <td><sub>initiate a session</sub></td>
+      <td><sub>'ok'</sub></td>
+    </tr>
+    <tr>
+      <td><sub>GET</sub></td>
+      <td><sub>/v1/events</sub></td>
+      <td><ul>
+        <li><sub>sessionId: an id to identify the current session</sub></li>
+        <li><sub>events: an array of events:<br/></sub>
+          <ul>
+            <li><sub>name: the name of the event</sub></li>
+            <li><sub>props (optional): a dictionary of properties attached to the event</sub></li>
+            <li><sub>ts: the unix timestamp of the event</sub></li>
+          </ul>
+        </li>
+      </ul></td>
+      <td><sub>log a list of events</sub></td>
+      <td><sub>'ok'</sub></td>
+    </tr>
+    <tr>
+      <td><sub>GET</sub></td>
+      <td><sub>/v1/setUserId</sub></td>
+      <td><ul>
+        <li><sub>sessionId: an id to identify the current session</sub></li>
+        <li><sub>userId: an id to identify the user, probably the one you use in your app</sub></li>
+      </ul></td>
+      <td><sub>link the session to a user</sub></td>
+      <td><sub>'ok'</sub></td>
+    </tr>
+    <tr>
+      <td><sub>GET</sub></td>
+      <td><sub>/v1/setUserProps</sub></td>
+      <td><ul>
+        <li><sub>sessionId: an id to identify the current session</sub></li>
+        <li><sub>props: a dictionary of properties attached to the user (will apply accross sessions)</sub></li>
+      </ul></td>
+      <td><sub>set properties related to the user</sub></td>
+      <td><sub>'ok'</sub></td>
+    </tr>
+  </tbody>
+</table>
+
+Some examples
+
+```
+# does nothing
+GET /v1/ping -> 'pong' 
+
+# create a user for that session, flag this user as an active user for the current period, and attach the event to the user
+GET /v1/events?q={'events':[{'name':'login','ts':123}],'sessionId':'abc'} -> 'ok'
+
+# flag this user as an active user for the current period (if needed), and attach the event with its properties to the user
+GET /v1/events?q={'events':[{'name':'share','ts':124,'props':{'destination':'fb'}}],'sessionId':'abc'} -> 'ok'
+
+# same as before, with multiple events
+GET /v1/events?q={'events':[{'name':'like','ts':126},{'name':'logout','ts':125}],'sessionId':'abc'} -> 'ok' 
+
+# change the id of the user attached to the current session to 'myUserId' (merge with existing user if needed)
+GET /v1/setUserId?q={'sessionId':'abc','userId':'myUserId'} -> 'ok'
+
+# set the name of the user
+GET /v1/setUserProps?q={'sessionId':'abc','props':{'first-name':'barack','last-name':'obama'}} -> 'ok' 
+
+#log an event, for a new session
+GET /v1/events?q={'events':[{'name':'login','ts':123}],'sessionId':'xyz'} -> 'ok' 
+```
+
+
+## clients
+In order to make it easier to log events, some clients are available:
+- [javascript (browser based)](https://github.com/gsabran/open-metrics-client-javascript) (will also be hosted at [/apis/javascript.js](https://github.com/gsabran/open-metrics-client-javascript/public/apis/javascript.js))
+- [node](https://github.com/gsabran/open-metrics-client-npm)
+- want another language? contribute!
+
+## TODO
+- test server logging
+- write UI to see metrics
+- create server + client for creating and display metrics
+- write clients in more languages / framework
+- make it possible to log time spent
+- write doc to set up server (EC2 and heroku)
+- and more!
