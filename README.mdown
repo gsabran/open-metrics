@@ -1,5 +1,9 @@
 # OpenMetrics
 
+
+## An open source, free and powerful events tracking system
+
+
 ## Goal
 This is a side project that intends to provide
 - easy to set up events logging system
@@ -12,14 +16,24 @@ This is a side project that intends to provide
     - live dashboard
 - those metrics being time series or total number, segmentable on user groups if needed, with the possibility to import external data for richer metrics, or simply to import premade metrics to see all what you care about in one place.
 
+The workflow should be:
+- a tech person setup the server (see [server setup](https://github.com/gsabran/open-metrics#server-setup))
+- a tech person use a [client](https://github.com/gsabran/open-metrics#clients) to easily log the events of interest
+  - if there is no client avaialble for the language/framework this tech person likes. He/she creates one and does a PR :)
+- a person login to the dedicated interface to easily fetch/create the metrics of interest. There is no need to be technical to understand how to use it
+
 This repo has both a server that responds to events logging queries, and a UI (to be done:) ) to query and vizualize data (they might be separated in the future)
 
-## This solution aims to be efficient, intuitive, powerful, **self hosted** and free
 
+## clients
+In order to make it easier to log events, some clients are available:
+- [javascript (browser based)](https://github.com/gsabran/open-metrics-client-javascript) (will also be hosted at [/apis/javascript/client.js](https://github.com/gsabran/open-metrics-client-javascript/blob/d21e9889770674358f7358c4cdc9762ef240f338/client.js))
+- [node](https://github.com/gsabran/open-metrics-client-npm)
+- want another language? contribute!
 
 ## API
 
-The raw logging API is:
+The base logging API is:
 
 
 <table style="font-size:14px;">
@@ -50,7 +64,7 @@ The raw logging API is:
       <td><sub>/v1/events</sub></td>
       <td><ul>
         <li><sub>sessionId: an id to identify the current session</sub></li>
-        <li><sub>events: an array of events:<br/></sub>
+        <li><sub>events: an array of events, each defined by:<br/></sub>
           <ul>
             <li><sub>name: the name of the event</sub></li>
             <li><sub>props (optional): a dictionary of properties attached to the event</sub></li>
@@ -115,16 +129,42 @@ GET /v1/setUserId?q={'sessionId':'abc','userId':'myUserId'} -> 'ok'
 # set the name of the user
 GET /v1/setUserProps?q={'sessionId':'abc','props':{'first-name':'barack','last-name':'obama'}} -> 'ok' 
 
+# set the browser used
+GET /v1/setSessionProps?q={'sessionId':'abc','props':{'browser':'Firefox'}} -> 'ok' 
+
 #log an event, for a new session
 GET /v1/events?q={'events':[{'name':'login','ts':123}],'sessionId':'xyz'} -> 'ok' 
 ```
 
 
-## clients
-In order to make it easier to log events, some clients are available:
-- [javascript (browser based)](https://github.com/gsabran/open-metrics-client-javascript) (will also be hosted at [/apis/javascript.js](https://github.com/gsabran/open-metrics-client-javascript/public/apis/javascript.js))
-- [node](https://github.com/gsabran/open-metrics-client-npm)
-- want another language? contribute!
+## Server setup
+In order to make it easier for people to get started, here are some guidelines to set up the server on some popular hosting services:
+
+### Heroku (from [here](https://github.com/jordansissel/heroku-buildpack-meteor))
+
+- requirement:
+  - have an heroku account
+  - install the command line interface (CLI)
+
+```bash
+# setup heroku (do only once)
+heroku apps:create appName
+heroku buildpacks:set https://github.com/jordansissel/heroku-buildpack-meteor.git
+heroku addons:create mongolab:sandbox
+heroku config:add MONGO_URL=<insert_value_of_MONGOLAB_URI_here>
+heroku config:add ROOT_URL=<insert_url_created_above_here>
+heroku labs:enable http-session-affinity
+
+# push and restart server (do every time you change code)
+git push heroku master
+
+```
+
+
+Once that's done, you can see your app in the heroku website. I'd recommand upgrading your dyno to the hobby dyno else your server won't run 24/7
+
+### AWS EC2: TODO
+
 
 ## TODO
 - test server logging
@@ -132,5 +172,5 @@ In order to make it easier to log events, some clients are available:
 - create server + client for creating and display metrics
 - write clients in more languages / framework
 - add api to log time spent
-- write doc to set up server (EC2 and heroku)
+- write doc to set up server (EC2)
 - and more!
