@@ -23,3 +23,5 @@ accounts-twitter
 meteorhacks:picker
 standard-minifier-css
 standard-minifier-js
+kadira:react-layout
+kadira:flow-router

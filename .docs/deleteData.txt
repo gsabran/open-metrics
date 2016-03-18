@@ -1,3 +1,6 @@
+const {ClientUsers, Events, UniqueActiveUsers, Metrics, Users} = require('./lib/collections.js');
+
+
 while (ClientUsers.findOne()) ClientUsers.remove(ClientUsers.findOne()._id)
 while (Events.findOne()) Events.remove(Events.findOne()._id)
 while (UniqueActiveUsers.findOne()) UniqueActiveUsers.remove(UniqueActiveUsers.findOne()._id)

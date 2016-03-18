@@ -35,10 +35,13 @@ export const logActivity = (user) => {
 
   // don't block main thread for query that might take some time if there's a lot of data there
   Meteor.setTimeout(() => {
-    UniqueActiveUsers.update({uid: user.uid, type: 'hour', id: hour}, {upsert: true});
-    UniqueActiveUsers.update({uid: user.uid, type: 'day', id: day}, {upsert: true});
-    UniqueActiveUsers.update({uid: user.uid, type: 'week', id: week}, {upsert: true});
-    UniqueActiveUsers.update({uid: user.uid, type: 'month', id: month}, {upsert: true});
+    const insertIfNotExists = (params) => {
+      UniqueActiveUsers.update(params, {$set: params}, {upsert: true});
+    }
+    insertIfNotExists({uid: user.uid, type: 'hour', id: hour});
+    insertIfNotExists({uid: user.uid, type: 'day', id: day});
+    insertIfNotExists({uid: user.uid, type: 'week', id: week});
+    insertIfNotExists({uid: user.uid, type: 'month', id: month});
   });
 }
 
@@ -78,6 +81,7 @@ export const setUserId = (user, newId) => {
   }
   // update the uid field of related events
   Events.update({uid: currentUid}, {$set: {uid: newId}}, {multi: true});
+  UniqueActiveUsers.update({uid: currentUid}, {$set: {uid: newId}}, {multi: true});
 }
 
 /*

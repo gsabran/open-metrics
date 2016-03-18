@@ -1,6 +1,6 @@
 {
   "name": "metrics",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "an open source app to log, process, and display product metrics",
   "scripts": {
     "test": "mocha ./tests --compilers js:babel-register"
@@ -13,6 +13,13 @@
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
     "sinon": "^1.17.3",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "invariant": "^2.2.0",
+    "react": "~0.14.7",
+    "react-addons-test-utils": "~0.14.7",
+    "react-dom": "~0.14.7",
+    "react-mixin": "^3.0.3",
+    "react-mounter": "^1.0.0",
+    "react-tap-event-plugin": "^0.2.2"
   }
 }
