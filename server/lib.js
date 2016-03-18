@@ -2,6 +2,7 @@ import {
   ClientUsers,
   Events,
   UniqueActiveUsers,
+  ClientSessions,
 } from '../lib/collections.js';
 
 /*
