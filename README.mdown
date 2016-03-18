@@ -1,0 +1,36 @@
+# OpenMetrics
+
+This is a side project that intend to provide
+- easy to set up event logging system
+- flexible and easy & intuitive (both for developpers and non technical persons) to use query interface that supports
+    - events data
+    - retention
+    - funnel
+    - custom metrics
+    - user timeline
+    - live dashboard
+- those analytics being time series or total, segmentable on user groups if needed, with the possibility to import external data for richer metrics, or simply to import premade metrics to see all what you care about in one place.
+
+This repo has both a server that responds to events logging queries, and a UI (to be done:) ) to query and vizualize data
+
+The logging API is:
+
+| type  | route            | params (passed by '?q={...}')                                                                      | action                        | expected response |
+| ----- | ---------------- | -------------------------------------------------------------------------------------------------- | ----------------------------- | ------ |
+| GET   | /v1/ping         |                                                                                                    | test that the server is alive | 'pong' |
+| GET   | /v1/createUser   | <ul><li>sessionId: an id to identify the current session                         </li></ul>        | initiate a session            | 'ok'   |
+| GET   | /v1/events       | <ul><li>sessionId: an id to identify the current session                         </li>
+                                 <li>events: an array of events:<br/>
+                                    <ul><li>name: the name of the event                                       </li>
+                                        <li>props (optional): a dictionary of properties attached to the event</li>
+                                        <li>ts: the unix timestamp of the event                               </li>
+                                    </ul>
+                             </li></ul>                                                                                         | log a list of events          | 'ok'   |
+| GET   | /v1/setUserId    | <ul><li>sessionId: an id to identify the current session                                    </li>
+                                 <li>userId: an id to identify the user, probably the one you use in your app            </li>
+                             </ul>                                                                                              | link the session to a user    | 'ok'   |
+| GET   | /v1/setUserProps | <ul><li>sessionId: an id to identify the current session                                    </li>
+                                 <li>props: a dictionary of properties attached to the user (will apply accross sessions)</li>
+                             </ul>                                                                                              | link the session to a user    | 'ok'   |
+
+
