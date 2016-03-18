@@ -31,6 +31,8 @@ Router = {
       get: function(cb) {
         Picker.route(route, function(params, req, res) {
           if (req.method == 'GET') {
+            if (process.env.PRINT_LOG + '' === '1')
+              console.log('GET', route, params);
             res.setHeader('Access-Control-Allow-Origin', '*');
             cb(JSON.parse(params.query.q), req, res);
           }
